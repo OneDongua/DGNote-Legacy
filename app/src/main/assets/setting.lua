@@ -1,0 +1,724 @@
+require "import"
+require "import"
+import "mod"
+import "color"
+
+layout2={
+  LinearLayout;
+  layout_height="fill";
+  layout_width="fill";
+  orientation="vertical";
+  {
+    LinearLayout;
+    layout_height="56dp";
+    layout_width="fill";
+    id="mainActionBar";
+    elevation=4;
+    gravity="left|center";
+    paddingLeft="12dp";
+    {
+      ImageView;
+      id="back";
+      src=ICON_BACK;
+      layout_width="24dp";
+      layout_height="24dp";
+      layout_gravity="center";
+      layout_marginRight="12dp";
+    };
+    {
+      TextView;
+      Text="设置";
+      textSize="20sp";
+      id="mainTitle";
+    };
+  };
+  {
+    ScrollView;
+    layout_width="fill";
+    layout_height="fill";
+    VerticalScrollBarEnabled=false;
+    id="mainBackground";
+    {
+      LinearLayout;
+      orientation="vertical";
+      id="NoteBackground1";
+      layout_width="fill";
+      layout_height="fill";
+    };
+  };
+}
+
+设置视图(layout2)
+
+水波纹(back)
+
+mainActionBar.setBackgroundColor(COLOR_MAIN)
+mainBackground.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+mainTitle.setTextColor(COLOR_ON_MAIN)
+mainTitle.getPaint().setFakeBoldText(true)
+设置字体(mainTitle)
+settingList={
+  LinearLayout;
+  id="NoteBackground2";
+  Orientation="vertical";
+  layout_width="fill";
+  layout_height="fill";
+}
+NoteBackground1.addView(loadlayout(settingList))
+
+divider={
+  LinearLayout;
+  layout_width="fill";
+  layout_height="wrap";
+  orientation="vertical";
+  {
+    LinearLayout;
+    id="line";
+    layout_width="fill";
+    layout_height="1dp";
+    background="#80A0A0A0";
+  };
+  {
+    TextView;
+    id="category";
+    layout_width="wrap";
+    layout_height="wrap";
+    paddingTop="16dp";
+    paddingLeft="16dp";
+    paddingBottom="4dp";
+    textSize="14sp";
+  }
+}
+item={
+  LinearLayout;
+  id="NoteBackground3";
+  layout_height="wrap";
+  layout_width="fill";
+  {
+    LinearLayout;
+    id="NoteBackground4";
+    layout_height="fill";
+    layout_width="fill";
+    {
+      LinearLayout;
+      id="NoteBackground5";
+      layout_width="wrap";
+      padding="16dp";
+      layout_height="fill";
+      Orientation="vertical";
+      {
+        TextView;
+        maxLines="2";
+        id="NoteTitle";
+        text="标题";
+        textSize="16sp";
+      };
+      {
+        TextView;
+        maxLines="3";
+        id="NoteText";
+        text="内容";
+        textSize="14sp";
+      };
+    };
+  };
+};
+checkboxItem={
+  LinearLayout;
+  id="NoteBackground3";
+  layout_height="wrap";
+  layout_width="fill";
+  {
+    FrameLayout;
+    id="NoteBackground4";
+    layout_height="fill";
+    layout_width="fill";
+    {
+      LinearLayout;
+      id="NoteBackground5";
+      layout_width="wrap";
+      padding="16dp";
+      layout_height="fill";
+      Orientation="vertical";
+      {
+        TextView;
+        maxLines="2";
+        id="NoteTitle";
+        text="标题";
+        textSize="16sp";
+      };
+      {
+        TextView;
+        maxLines="3";
+        id="NoteText";
+        text="内容";
+        textSize="14sp";
+      };
+    };
+    {
+      LinearLayout;
+      layout_height="fill";
+      layout_width="wrap";
+      layout_gravity="center|right";
+      {
+        CheckBox;
+        layout_height="fill";
+        gravity="center";
+        paddingRight="16dp";
+        id="CBox";
+        clickable=false
+      };
+    };
+  };
+};
+switchItem={
+  LinearLayout;
+  id="NoteBackground3";
+  layout_height="wrap";
+  layout_width="fill";
+  {
+    FrameLayout;
+    id="NoteBackground4";
+    layout_height="fill";
+    layout_width="fill";
+    {
+      LinearLayout;
+      id="NoteBackground5";
+      layout_width="wrap";
+      padding="16dp";
+      layout_height="fill";
+      Orientation="vertical";
+      {
+        TextView;
+        maxLines="2";
+        id="NoteTitle";
+        text="标题";
+        textSize="16sp";
+      };
+      {
+        TextView;
+        maxLines="3";
+        id="NoteText";
+        text="内容";
+        textSize="14sp";
+      };
+    };
+    {
+      LinearLayout;
+      layout_height="fill";
+      layout_width="wrap";
+      layout_gravity="center|right";
+      {
+        Switch;
+        layout_height="fill";
+        gravity="center";
+        paddingRight="16dp";
+        id="sw";
+        clickable=false
+      };
+    };
+  };
+};
+
+NoteBackground2.addView(loadlayout(divider))
+line.setVisibility(View.GONE)
+category.setTextColor(COLOR_ACCENT)
+category.setText("外观")
+category.getPaint().setFakeBoldText(true)
+设置字体(category)
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("排序方式")
+NoteText.setText("笔记列表排序方式")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  index=activity.getSharedData("sort_Index")
+  if type(index) ~= "number" then
+    index=1
+  end
+  单选列表={}
+  table.insert(单选列表,"名称正序")
+  table.insert(单选列表,"名称倒序")
+  table.insert(单选列表,"修改时间正序")
+  table.insert(单选列表,"修改时间倒序")
+  AlertDialog.Builder(this).setTitle("选择排序方式")
+  .setSingleChoiceItems(String(单选列表),index-1,
+  {onClick=function(dialog,pos)
+      index=pos+1
+      sort=单选列表[index]
+      activity.setSharedData("sort",sort)
+      activity.setSharedData("sort_Index",index)
+      dialog.dismiss()
+      activity.setSharedData("change",true)
+    end
+  })
+  .show()
+end
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("主题色")
+NoteText.setText("更换主题颜色")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  index=activity.getSharedData("theme_Index")
+  if type(index) ~= "number" then
+    index=1
+  end
+  单选列表={}
+  table.insert(单选列表,"鸭绿")
+  table.insert(单选列表,"蓝色")
+  table.insert(单选列表,"粉色")
+  table.insert(单选列表,"靛蓝")
+  table.insert(单选列表,"绿色")
+  table.insert(单选列表,"灰色")
+  table.insert(单选列表,"蓝灰")
+  table.insert(单选列表,"纯白")
+  table.insert(单选列表,"纯黑")
+  table.insert(单选列表,"自定义")
+  AlertDialog.Builder(this).setTitle("选择主题色")
+  .setSingleChoiceItems(String(单选列表),index-1,
+    {onClick = function(dialog, pos)
+    index = pos + 1
+    color = 单选列表[index]
+    activity.setSharedData("color", color)
+    activity.setSharedData("theme_Index", index)
+    dialog.dismiss()
+    activity.recreate()
+    activity.setSharedData("change", true)
+  end
+  })
+  .show()
+end
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("自定义主题")
+NoteText.setText("自定义你的专属主题")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  activity.newActivity("customTheme")
+end
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("显示样式")
+NoteText.setText("设置列表显示样式")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  index=activity.getSharedData("listmode_Index")
+  if type(index) ~= "number" then
+    index=2
+  end
+  单选列表={}
+  table.insert(单选列表,"单列")
+  table.insert(单选列表,"双列")
+  AlertDialog.Builder(this).setTitle("选择显示样式")
+  .setSingleChoiceItems(String(单选列表),index-1,
+  {onClick=function(dialog,pos)
+      index=pos+1
+      activity.setSharedData("listmode_Index",index)
+      dialog.dismiss()
+      activity.setSharedData("change",true)
+    end
+  })
+  .show()
+end
+
+NoteBackground2.addView(loadlayout(switchItem))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("隐藏时间标题")
+NoteText.setText("设置主页是否隐藏默认时间标题")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+sw3=sw
+水波纹(id)
+if activity.getSharedData("hideTimeTitle")==nil then
+  sw3.setChecked(false)
+ else
+  sw3.setChecked(activity.getSharedData("hideTimeTitle"))
+end
+id.onClick=function(view)
+  activity.setSharedData("change", true)
+  if sw3.isChecked() then
+    sw3.setChecked(false)
+    activity.setSharedData("hideTimeTitle", false)
+   else
+    sw3.setChecked(true)
+    activity.setSharedData("hideTimeTitle", true)
+  end
+end
+
+NoteBackground2.addView(loadlayout(divider))
+category.setTextColor(COLOR_ACCENT)
+category.setText("编辑")
+category.getPaint().setFakeBoldText(true)
+设置字体(category)
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("打开便签时视图操作")
+NoteText.setText("设置打开便签时默认视图操作")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  index=activity.getSharedData("openType_Index")
+  if type(index) ~= "number" then
+    index=1
+  end
+  单选列表={}
+  table.insert(单选列表,"默认置顶")
+  table.insert(单选列表,"默认置底")
+  AlertDialog.Builder(this).setTitle("选择操作")
+  .setSingleChoiceItems(String(单选列表),index-1,
+  {onClick=function(dialog,pos)
+      index=pos+1
+      openType=单选列表[index]
+      activity.setSharedData("openType",openType)
+      activity.setSharedData("openType_Index",index)
+      dialog.dismiss()
+    end
+  })
+  .show()
+end
+
+NoteBackground2.addView(loadlayout(switchItem))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("Markdown工具栏")
+NoteText.setText("设置编辑页是否显示底部工具栏")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+sw2=sw
+水波纹(id)
+if activity.getSharedData("enableMDTools")==nil then
+  sw2.setChecked(false)
+ else
+  sw2.setChecked(activity.getSharedData("enableMDTools"))
+end
+id.onClick=function(view)
+  if sw2.isChecked() then
+    sw2.setChecked(false)
+    activity.setSharedData("enableMDTools",false)
+   else
+    sw2.setChecked(true)
+    activity.setSharedData("enableMDTools",true)
+  end
+end
+
+NoteBackground2.addView(loadlayout(checkboxItem))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("关闭Markdown渲染")
+NoteText.setText("关闭实时Markdown渲染（包括图片）")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+cb2=CBox
+if activity.getSharedData("closeParseMD")==nil then
+  cb2.setChecked(false)
+ else
+  cb2.setChecked(activity.getSharedData("closeParseMD"))
+end
+id.onClick=function(view)
+  if cb2.isChecked() then
+    cb2.setChecked(false)
+    activity.setSharedData("closeParseMD",false)
+   else
+    cb2.setChecked(true)
+    activity.setSharedData("closeParseMD",true)
+  end
+end
+
+NoteBackground2.addView(loadlayout(checkboxItem))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("关闭横屏Markdown预览")
+NoteText.setText("关闭横屏时右侧实时Markdown预览")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+cb1=CBox
+if activity.getSharedData("closemarkdown")==nil then
+  cb1.setChecked(false)
+ else
+  cb1.setChecked(activity.getSharedData("closemarkdown"))
+end
+id.onClick=function(view)
+  if cb1.isChecked() then
+    cb1.setChecked(false)
+    activity.setSharedData("closemarkdown",false)
+   else
+    cb1.setChecked(true)
+    activity.setSharedData("closemarkdown",true)
+  end
+end
+
+NoteBackground2.addView(loadlayout(divider))
+category.setTextColor(COLOR_ACCENT)
+category.setText("图片")
+category.getPaint().setFakeBoldText(true)
+设置字体(category)
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("图片选择器")
+NoteText.setText("设置选择图片时使用内置选择或系统相册")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  index=activity.getSharedData("addImageType_Index")
+  if type(index) ~= "number" then
+    index=1
+  end
+  单选列表={}
+  table.insert(单选列表,"内置选择器")
+  table.insert(单选列表,"系统相册")
+  AlertDialog.Builder(this).setTitle("选择")
+  .setSingleChoiceItems(String(单选列表),index-1,
+  {onClick=function(dialog,pos)
+      index=pos+1
+      addImage=单选列表[index]
+      activity.setSharedData("addImageType",addImage)
+      activity.setSharedData("addImageType_Index",index)
+      dialog.dismiss()
+    end
+  })
+  .show()
+end
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("图片查看默认打开应用")
+NoteText.setText("设置查看图片时默认打开方式")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  AlertDialog.Builder(this)
+  .setTitle("图片查看应用包名")
+  .setView(loadlayout({
+    LinearLayout;
+    layout_width="fill";
+    layout_height="wrap";
+    paddingLeft="16dp";
+    paddingRight="16dp";
+    {
+      EditText;
+      id="packageName";
+      hint="包名";
+      layout_width="fill";
+      layout_height="wrap";
+      selectAllOnFocus="true";
+    };
+  }))
+  .setPositiveButton("确定",{onClick=function()
+      if packageName.Text=="" then
+        activity.setSharedData("viewImagePackageName", nil)
+       else
+        activity.setSharedData("viewImagePackageName", packageName.Text)
+      end
+  end})
+  .setNegativeButton("取消", nil)
+  .show();
+  packageName.setText(activity.getSharedData("viewImagePackageName"))
+end
+
+NoteBackground2.addView(loadlayout(divider))
+category.setTextColor(COLOR_ACCENT)
+category.setText("字体")
+category.getPaint().setFakeBoldText(true)
+设置字体(category)
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("设置字体")
+NoteText.setText("设置主要界面的字体")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  index=activity.getSharedData("font_Index")
+  if type(index) ~= "number" then
+    index=1
+  end
+  fontList=luajava.astable(File(pathf).listFiles())
+  fonts={}
+  table.insert(fonts,"无")
+  for k,f in ipairs(fontList) do
+    table.insert(fonts,f.getName())
+  end
+  AlertDialog.Builder(this).setTitle("选择")
+  .setSingleChoiceItems(String(fonts),index-1,
+  {onClick=function(dialog,pos)
+      index=pos+1
+      font=fonts[index]
+      activity.setSharedData("font",font)
+      activity.setSharedData("font_Index",index)
+      dialog.dismiss()
+      activity.setSharedData("change",true)
+      activity.recreate()
+    end
+  })
+  .show()
+end
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("管理字体")
+NoteText.setText("导入或删除字体(支持ttf、otf、ttc格式)")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  activity.newActivity("fontManager")
+end
+
+NoteBackground2.addView(loadlayout(divider))
+category.setTextColor(COLOR_ACCENT)
+category.setText("同步")
+category.getPaint().setFakeBoldText(true)
+设置字体(category)
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("WebDAV")
+NoteText.setText("设置WebDAV同步相关选项")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  activity.newActivity("webdav")
+end
+
+NoteBackground2.addView(loadlayout(divider))
+category.setTextColor(COLOR_ACCENT)
+category.setText("导入与导出")
+category.getPaint().setFakeBoldText(true)
+设置字体(category)
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("导入/导出")
+NoteText.setText("导入或导出便签")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+id.onClick=function(view)
+  activity.newActivity("importation")
+end
+
+NoteBackground2.addView(loadlayout(divider))
+category.setTextColor(COLOR_ACCENT)
+category.setText("备份")
+category.getPaint().setFakeBoldText(true)
+设置字体(category)
+
+NoteBackground2.addView(loadlayout(switchItem))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("自动备份")
+NoteText.setText("备份恢复界面在编辑页右上角")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+sw1=sw
+水波纹(id)
+if activity.getSharedData("autoBak")==nil then
+  sw1.setChecked(false)
+ else
+  sw1.setChecked(activity.getSharedData("autoBak"))
+end
+id.onClick=function(view)
+  if sw1.isChecked() then
+    sw1.setChecked(false)
+    activity.setSharedData("autoBak",false)
+   else
+    sw1.setChecked(true)
+    activity.setSharedData("autoBak",true)
+  end
+end
+
+NoteBackground2.addView(loadlayout(item))
+NoteBackground3.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+NoteTitle.setText("自动备份时间")
+NoteText.setText("设置自动备份间隔时间(单位:秒)")
+设置字体(NoteTitle)
+设置字体(NoteText)
+id=NoteBackground4
+水波纹(id)
+if activity.getSharedData("autoBakTime")==nil or activity.getSharedData("autoBakTime")=="" then
+  activity.setSharedData("autoBakTime","150")
+end
+id.onClick=function(view)
+  AlertDialog.Builder(this)
+  .setTitle("自动备份时间")
+  .setView(loadlayout({
+    LinearLayout;
+    layout_width="fill";
+    layout_height="wrap";
+    paddingLeft="16dp";
+    paddingRight="16dp";
+    {
+      EditText;
+      id="autoBakTime";
+      hint="单位:秒";
+      InputType="number";
+      layout_width="fill";
+      layout_height="wrap";
+    };
+  }))
+  .setPositiveButton("确定",{onClick=function()
+      if autoBakTime.Text=="" then
+        print("不得为空")
+       else
+        activity.setSharedData("autoBakTime",autoBakTime.Text)
+      end
+  end})
+  .setNegativeButton("取消", nil)
+  .show();
+  autoBakTime.setText(activity.getSharedData("autoBakTime"))
+end
+
+back.onClick=function(view)
+  activity.finish()
+end

@@ -1,0 +1,234 @@
+require "import"
+import "mod"
+import "color"
+
+layout2={
+  LinearLayout;
+  layout_height="fill";
+  layout_width="fill";
+  orientation="vertical";
+  id="mainBackground";
+  {
+    FrameLayout;
+    layout_width="fill";
+    layout_height="56dp";
+    elevation=4;
+    id="mainActionBar";
+    {
+      LinearLayout;
+      layout_height="fill";
+      layout_gravity="center|left";
+      paddingLeft="12dp";
+      {
+        ImageView;
+        id="back";
+        src=ICON_BACK;
+        layout_width="24dp";
+        layout_height="24dp";
+        layout_gravity="center";
+        layout_marginRight="12dp";
+      };
+      {
+        TextView;
+        gravity="center";
+        id="mainTitle";
+        text="加载中";
+        textSize="20sp";
+        layout_height="fill";
+      };
+    };
+    {
+      LinearLayout;
+      layout_height="24dp";
+      layout_gravity="center|right";
+      paddingRight="14dp";
+      {
+        ImageView;
+        id="restore";
+        src=ICON_RESTORE;
+        layout_width="24dp";
+        layout_height="fill";
+      };
+      {
+        LinearLayout;
+        layout_height="0dp";
+        layout_width="18dp";
+      };
+      {
+        ImageView;
+        id="delete";
+        src=ICON_DELETE;
+        layout_width="24dp";
+        layout_height="fill";
+      };
+    };
+  };
+  {
+    ScrollView;
+    layout_height="fill";
+    VerticalScrollBarEnabled=false;
+    layout_width="fill";
+    id="mainBackground";
+    {
+      LinearLayout;
+      id="NoteBackground1";
+      layout_width="fill";
+      layout_height="fill";
+      orientation="vertical";
+      padding="12dp";
+      paddingTop="4dp";
+      {
+        TextView;
+        backgroundColor="#00000000";
+        id="NoteTitle";
+        layout_width="fill";
+        paddingTop="10dp";
+        paddingBottom="10dp";
+        paddingLeft="4dp";
+        paddingRight="4dp";
+        gravity="start";
+        textSize="24sp";
+        textIsSelectable=true;
+      };
+      {
+        TextView;
+        backgroundColor="#00000000";
+        id="NoteText";
+        layout_width="fill";
+        layout_height="fill";
+        gravity="start";
+        paddingTop="10dp";
+        paddingBottom="10dp";
+        paddingLeft="4dp";
+        paddingRight="4dp";
+        textSize="16sp";
+        textIsSelectable=true;
+        minHeight="35%h";
+      };
+      {
+        TextView;
+        id="wordnumber";
+        text="x个字";
+        textSize="11sp";
+        gravity="center|right";
+        layout_width="fill";
+        layout_height="wrap";
+      };
+      {
+        TextView;
+        id="date";
+        textSize="11sp";
+        gravity="right";
+        layout_width="fill";
+        layout_height="wrap";
+      };
+      {
+        LinearLayout;
+        layout_height="8dp";
+      };
+    };
+  };
+};
+
+设置视图(layout2)
+
+水波纹(back)
+水波纹(delete)
+水波纹(restore)
+
+data=...
+path=tostring(data["path"])
+--For backup
+oldPath=tostring(data["oldPath"])
+isbak=data["isbak"]
+
+mainActionBar.setBackgroundColor(COLOR_MAIN)
+mainTitle.setTextColor(COLOR_ON_MAIN)
+mainTitle.getPaint().setFakeBoldText(true)
+设置字体(mainTitle)
+mainBackground.setBackgroundColor(COLOR_MAIN_BACKGROUND)
+NoteTitle.setTextColor(COLOR_ON_BACKGROUND)
+mainTitle.setText("浏览")
+NoteText.setTextColor(COLOR_ON_BACKGROUND_SEC)
+NoteTitle.setText(File(path).getName())
+NoteText.setText(读取文件(path))
+NoteTitle.getPaint().setFakeBoldText(true)
+设置字体(NoteTitle)
+设置字体(NoteText)
+NoteText.setLineSpacing(0, 1.1)
+
+wordnumber.setText(tostring(String(NoteText.Text).length()).."个字")
+date.setText(文件修改时间(path))
+设置字体(wordnumber)
+设置字体(date)
+
+back.onClick=function(view)
+  activity.finish()
+end
+
+mainTitle.onClick=function(view)
+  mainBackground.fullScroll(View.FOCUS_UP)
+end
+
+restore.onClick=function(view)
+  if isbak~=true then
+    namec=string.find(path,"/recycle/")
+    namec=namec+9
+    name=string.sub(path,namec)
+    if File(pathn..name).isFile() then
+      dialog=AlertDialog.Builder(this)
+      dialog.setTitle("是否覆盖")
+      dialog.setMessage("已存在相同标题便签")
+      dialog.setPositiveButton("确定",{onClick=function(v)
+          os.rename(path,pathn..name)
+          if File(path).isFile() then
+            print("恢复失败")
+           else
+            print("恢复成功")
+            updateWebdavInfo()
+            activity.finish()
+          end
+      end})
+      dialog.setNegativeButton("取消",nil)
+      dialog.show()
+     else
+      创建父文件(pathn..name)
+      os.rename(path,pathn..name)
+      if File(path).isFile() then
+        print("恢复失败")
+       else
+        print("恢复成功")
+        updateWebdavInfo()
+        activity.finish()
+      end
+    end
+   else
+    dialog=AlertDialog.Builder(this)
+    dialog.setTitle("是否恢复？")
+    dialog.setMessage("操作将无法撤销")
+    dialog.setPositiveButton("确定",{onClick=function(v)
+        写入文件(oldPath,读取文件(path))
+        print("恢复成功")
+        activity.finish()
+    end})
+    dialog.setNegativeButton("取消",nil)
+    dialog.show()
+  end
+end
+
+delete.onClick=function(view)
+  dialog=AlertDialog.Builder(this)
+  dialog.setTitle("是否删除？")
+  dialog.setMessage("操作将无法撤销")
+  dialog.setPositiveButton("确定",{onClick=function(v)
+      os.remove(path)
+      if File(path).isFile() then
+        print("删除失败")
+       else
+        print("删除成功")
+        activity.finish()
+      end
+  end})
+  dialog.setNegativeButton("取消",nil)
+  dialog.show()
+end
